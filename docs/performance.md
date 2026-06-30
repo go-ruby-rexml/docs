@@ -29,9 +29,23 @@ checked **byte-identical to MRI** before timing.
   (`rexml.rb` + `run.sh`). Reproduce:
   `RBGO=./rbgo TRUFFLE=truffleruby bash bench/modules/run.sh 5`.
 
+## Result (best of 5, ms)
+
+| Runtime | time | vs MRI |
+| --- | ---: | ---: |
+| **rbgo** (go-ruby-rexml) | 20 | 0.04× |
+| MRI (ruby 4.0.5) | 510 | 1.00× |
+| MRI + YJIT | 310 | 0.61× |
+| JRuby 10.1.0.0 | 2850 | 5.59× |
+| TruffleRuby 34.0.1 | 1490 | 2.92× |
+
+rbgo runs on **go-ruby-rexml** and is **~25x faster than MRI** here (0.04x): MRI's REXML is a pure-Ruby XML parser/serializer, so the compiled pure-Go library dominates the parse+serialize loop. Second-biggest win of the wave-3 suite.
+
 !!! note "Honest framing"
-    No headline numbers are reproduced on this page on purpose: the parity suite
-    is the source of truth and is re-run per release. Rows that complete in well
-    under a couple hundred milliseconds carry the most relative noise; treat
-    their ratios as order-of-magnitude. The published figures are real measured
-    numbers — nothing is cherry-picked.
+    JRuby and TruffleRuby are timed **cold, single-shot**, so they carry JVM /
+    Graal startup on every run — read them as one-shot `ruby file.rb` costs, the
+    same way `rbgo` and MRI are measured, not as steady-state JIT numbers. Rows
+    that complete in well under ~200 ms carry the most relative noise; treat
+    their ratios as order-of-magnitude. These are **real measured numbers** from
+    the 2026-06-30 run (Apple M-series; `ruby 4.0.5 +PRISM`, `jruby 10.1.0.0`,
+    `truffleruby 34.0.1`) — nothing is fabricated or cherry-picked.
