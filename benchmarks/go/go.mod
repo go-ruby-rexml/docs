@@ -1,5 +1,5 @@
 module bench
 
-go 1.26.4
+go 1.27.1
 
-require github.com/go-ruby-rexml/rexml v0.0.0-20260916101905-c8e846bf8b6e
+require github.com/go-ruby-rexml/rexml v0.0.0-20261010114525-a74626b88c38
